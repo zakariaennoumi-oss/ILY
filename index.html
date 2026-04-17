@@ -276,10 +276,8 @@
     <p class="subtitle">Every day with you feels like a gift.<br>I want to give you all of mine.</p>
 
     <div class="buttons" id="buttons">
-      <button class="btn-yes" onclick="sayYes()">✨ Yes !</button>
-      <button class="btn-no" id="noBtn" onmouseover="runAway(this)" ontouchstart="runAway(this)">
-        No...
-      </button>
+      <button class="btn-yes" id="yesBtn" onclick="sayYes()">✨ Yes !</button>
+      <button class="btn-no"  id="noBtn"  onmouseover="swapLabels()">No...</button>
     </div>
   </div>
 
@@ -308,43 +306,35 @@
     document.body.appendChild(p);
   }
 
-  // --- No button: 3 fixed escape positions ---
-  const noBtn = document.getElementById('noBtn');
-  const yesBtn = document.querySelector('.btn-yes');
-  let noStep = 0;
+  // --- Swap labels on No hover ---
+  const noBtn  = document.getElementById('noBtn');
+  const yesBtn = document.getElementById('yesBtn');
 
-  const escapePosts = [
-    { left: '72vw', top: '12vh' },
-    { left: '8vw',  top: '72vh' },
-    null
-  ];
-  const yesSizes   = ['1.55rem', '1.95rem', '2.3rem'];
-  const yesPadding = ['0.95rem 3.2rem', '1.1rem 3.8rem', '1.3rem 4.5rem'];
+  function swapLabels() {
+    const yesText = yesBtn.textContent;
+    const noText  = noBtn.textContent;
 
-  function runAway(btn) {
-    if (noStep >= 3) return;
+    // Swap text
+    yesBtn.textContent = noText.trim();
+    noBtn.textContent  = yesText.trim();
 
-    if (noStep === 0) {
-      btn.style.position = 'fixed';
-      btn.style.margin = '0';
-      btn.style.transition = 'left 0.4s cubic-bezier(0.34,1.56,0.64,1), top 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s';
-    }
+    // Swap click behaviour
+    const yesClick = yesBtn.onclick;
+    yesBtn.onclick = null;
+    noBtn.onclick  = yesClick;
 
-    const pos = escapePosts[noStep];
-    noStep++;
+    // Swap CSS classes so styles follow
+    yesBtn.classList.remove('btn-yes'); yesBtn.classList.add('btn-no');
+    noBtn.classList.remove('btn-no');   noBtn.classList.add('btn-yes');
 
-    if (pos) {
-      btn.style.left = pos.left;
-      btn.style.top  = pos.top;
-    } else {
-      btn.style.opacity = '0';
-      btn.style.pointerEvents = 'none';
-    }
+    // Swap ids so next hover still targets the right element
+    yesBtn.id = 'noBtn';
+    noBtn.id  = 'yesBtn';
 
-    yesBtn.style.transition = 'font-size 0.45s cubic-bezier(0.34,1.56,0.64,1), padding 0.45s, box-shadow 0.45s';
-    yesBtn.style.fontSize = yesSizes[noStep - 1];
-    yesBtn.style.padding  = yesPadding[noStep - 1];
-    if (noStep >= 2) yesBtn.style.boxShadow = '0 18px 48px rgba(160,67,94,0.55)';
+    // Re-bind hover to the new "No" button
+    document.getElementById('noBtn').onmouseover = swapLabels;
+    document.getElementById('noBtn').ontouchstart = swapLabels;
+    document.getElementById('noBtn').onclick = null;
   }
 
   // --- Yes button ---
