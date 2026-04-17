@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You 💍</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fdf6ee;
+    --blush: #f2c4c4;
+    --rose: #d4748f;
+    --deep-rose: #a0435e;
+    --gold: #c9a84c;
+    --dark: #2a1a1f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Animated background petals */
+  .petal {
+    position: fixed;
+    top: -40px;
+    font-size: 1.4rem;
+    opacity: 0;
+    animation: fallPetal linear infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes fallPetal {
+    0%   { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0.8; }
+    100% { transform: translateY(110vh) rotate(360deg) translateX(60px); opacity: 0; }
+  }
+
+  /* Soft radial glow background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 30% 40%, rgba(242,196,196,0.45) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 50% at 75% 70%, rgba(212,116,143,0.2) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 80% at 50% 50%, rgba(253,246,238,1) 0%, transparent 100%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .card {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 4rem 3.5rem;
+    max-width: 540px;
+    width: 90%;
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 2px;
+    box-shadow:
+      0 0 0 1px rgba(201,168,76,0.1),
+      0 30px 80px rgba(160,67,94,0.12),
+      inset 0 1px 0 rgba(255,255,255,0.9);
+    animation: fadeUp 1.2s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .ring-icon {
+    font-size: 3.8rem;
+    display: block;
+    margin-bottom: 1.5rem;
+    animation: floatRing 3s ease-in-out infinite;
+    filter: drop-shadow(0 4px 16px rgba(212,116,143,0.4));
+  }
+
+  @keyframes floatRing {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50%       { transform: translateY(-10px) rotate(5deg); }
+  }
+
+  .intro {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1.05rem;
+    color: var(--rose);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+    animation: fadeUp 1.2s 0.2s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.15;
+    margin-bottom: 0.4rem;
+    animation: fadeUp 1.2s 0.35s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  h1 span {
+    color: var(--deep-rose);
+    font-style: italic;
+  }
+
+  .question-mark {
+    display: inline-block;
+    color: var(--gold);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.15); }
+  }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 1.8rem auto;
+    animation: fadeUp 1.2s 0.5s both;
+  }
+
+  .subtitle {
+    font-style: italic;
+    font-size: 1.1rem;
+    color: #8a6070;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 1.2s 0.55s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    animation: fadeUp 1.2s 0.7s cubic-bezier(0.16,1,0.3,1) both;
+    position: relative;
+    min-height: 60px;
+  }
+
+  .btn-yes {
+    padding: 0.85rem 2.8rem;
+    background: linear-gradient(135deg, var(--rose), var(--deep-rose));
+    color: white;
+    border: none;
+    border-radius: 1px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 6px 24px rgba(160,67,94,0.35);
+  }
+
+  .btn-yes:hover {
+    transform: translateY(-3px) scale(1.04);
+    box-shadow: 0 12px 32px rgba(160,67,94,0.45);
+  }
+
+  .btn-yes:active {
+    transform: scale(0.97);
+  }
+
+  .btn-no {
+    padding: 0.7rem 2rem;
+    background: transparent;
+    color: #bfa0a8;
+    border: 1px solid rgba(160,67,94,0.25);
+    border-radius: 1px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    position: absolute;
+    white-space: nowrap;
+  }
+
+  /* Love screen */
+  .love-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  .love-screen.active {
+    display: flex;
+  }
+
+  .hearts-burst {
+    font-size: 3rem;
+    animation: burst 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+    margin-bottom: 1rem;
+  }
+
+  @keyframes burst {
+    from { transform: scale(0) rotate(-20deg); opacity: 0; }
+    to   { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+
+  .love-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 3.8rem);
+    font-weight: 700;
+    font-style: italic;
+    color: var(--deep-rose);
+    line-height: 1.1;
+    animation: fadeUp 0.8s 0.2s both;
+  }
+
+  .love-sub {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: #a06070;
+    margin-top: 0.8rem;
+    animation: fadeUp 0.8s 0.4s both;
+  }
+
+  .forever {
+    margin-top: 1.2rem;
+    font-size: 2rem;
+    letter-spacing: 0.3em;
+    animation: fadeUp 0.8s 0.6s both;
+  }
+
+  /* Footer */
+  .footer-hearts {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--rose);
+    opacity: 0.5;
+    letter-spacing: 0.5em;
+    pointer-events: none;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+
+<!-- Falling petals generated by JS -->
+
+<div class="card" id="card">
+  <!-- Proposal content -->
+  <div id="proposal">
+    <span class="ring-icon">💍</span>
+    <p class="intro">My love, my life</p>
+    <h1>Will you <span>marry</span> me<span class="question-mark">?</span></h1>
+    <div class="divider"></div>
+    <p class="subtitle">Every day with you feels like a gift.<br>I want to give you all of mine.</p>
+
+    <div class="buttons" id="buttons">
+      <button class="btn-yes" onclick="sayYes()">✨ Yes !</button>
+      <button class="btn-no" id="noBtn" onmouseover="runAway(this)" ontouchstart="runAway(this)">
+        No...
+      </button>
+    </div>
+  </div>
+
+  <!-- Love screen -->
+  <div class="love-screen" id="loveScreen">
+    <div class="hearts-burst">💖</div>
+    <h2 class="love-title">I love you</h2>
+    <p class="love-sub">Forever and always, my darling. 🌹</p>
+    <p class="forever">✨ 💍 ✨</p>
+  </div>
+</div>
+
+<div class="footer-hearts">♥ &nbsp; ♥ &nbsp; ♥</div>
+
+<script>
+  // --- Falling petals ---
+  const emojis = ['🌸','🌺','🌹','💮','🌷','❤️','💕','✨'];
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement('div');
+    p.classList.add('petal');
+    p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.fontSize = (0.9 + Math.random() * 1.2) + 'rem';
+    p.style.animationDuration = (5 + Math.random() * 8) + 's';
+    p.style.animationDelay = (Math.random() * 8) + 's';
+    document.body.appendChild(p);
+  }
+
+  // --- No button runaway ---
+  const noBtn = document.getElementById('noBtn');
+  const buttonsDiv = document.getElementById('buttons');
+  let noEscapes = 0;
+
+  function runAway(btn) {
+    noEscapes++;
+    const container = buttonsDiv.getBoundingClientRect();
+    const btnW = btn.offsetWidth;
+    const btnH = btn.offsetHeight;
+
+    const maxX = container.width  - btnW  - 20;
+    const maxY = container.height - btnH + 30;
+
+    const rx = (Math.random() * maxX * 2 - maxX);
+    const ry = (Math.random() * maxY * 2 - maxY);
+
+    btn.style.transition = 'transform 0.18s cubic-bezier(0.34,1.56,0.64,1), font-size 0.3s';
+    btn.style.transform = `translate(${rx}px, ${ry}px)`;
+
+    if (noEscapes >= 3) {
+      btn.style.fontSize = '0.7rem';
+      btn.style.opacity = '0.3';
+    }
+    if (noEscapes >= 6) {
+      btn.style.opacity = '0';
+      btn.style.pointerEvents = 'none';
+    }
+  }
+
+  // --- Yes button ---
+  function sayYes() {
+    document.getElementById('proposal').style.display = 'none';
+    const ls = document.getElementById('loveScreen');
+    ls.classList.add('active');
+
+    // Burst of extra hearts
+    for (let i = 0; i < 30; i++) {
+      const h = document.createElement('div');
+      h.classList.add('petal');
+      h.textContent = ['💖','💗','💓','💞','✨','🌸'][Math.floor(Math.random()*6)];
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.fontSize = (1.2 + Math.random() * 1.5) + 'rem';
+      h.style.animationDuration = (3 + Math.random() * 4) + 's';
+      h.style.animationDelay = '0s';
+      document.body.appendChild(h);
+    }
+  }
+</script>
+</body>
+</html>
