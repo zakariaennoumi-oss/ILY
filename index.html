@@ -153,10 +153,10 @@
     gap: 1.2rem;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
     animation: fadeUp 1.2s 0.7s cubic-bezier(0.16,1,0.3,1) both;
     position: relative;
-    min-height: 60px;
+    min-height: 80px;
+    width: 100%;
   }
 
   .btn-yes {
@@ -196,7 +196,6 @@
     text-transform: uppercase;
     cursor: pointer;
     transition: opacity 0.2s;
-    position: absolute;
     white-space: nowrap;
   }
 
@@ -271,7 +270,7 @@
   <!-- Proposal content -->
   <div id="proposal">
     <span class="ring-icon">💍</span>
-    <p class="intro">YSMN</p>
+    <p class="intro">My love, my life</p>
     <h1>Will you <span>marry</span> me<span class="question-mark">?</span></h1>
     <div class="divider"></div>
     <p class="subtitle">Every day with you feels like a gift.<br>I want to give you all of mine.</p>
@@ -315,25 +314,34 @@
   let noEscapes = 0;
 
   function runAway(btn) {
+    // On first escape, lock its current position then switch to fixed so it can roam freely
+    if (!btn.dataset.floating) {
+      const r = btn.getBoundingClientRect();
+      btn.style.position = 'fixed';
+      btn.style.left = r.left + 'px';
+      btn.style.top  = r.top  + 'px';
+      btn.style.margin = '0';
+      btn.dataset.floating = '1';
+      noEscapes = 1;
+    }
+
     noEscapes++;
-    const container = buttonsDiv.getBoundingClientRect();
+    const margin = 20;
     const btnW = btn.offsetWidth;
     const btnH = btn.offsetHeight;
 
-    const maxX = container.width  - btnW  - 20;
-    const maxY = container.height - btnH + 30;
+    const rx = margin + Math.random() * (window.innerWidth  - btnW  - margin * 2);
+    const ry = margin + Math.random() * (window.innerHeight - btnH - margin * 2);
 
-    const rx = (Math.random() * maxX * 2 - maxX);
-    const ry = (Math.random() * maxY * 2 - maxY);
+    btn.style.transition = 'left 0.22s cubic-bezier(0.34,1.56,0.64,1), top 0.22s cubic-bezier(0.34,1.56,0.64,1), font-size 0.3s, opacity 0.3s';
+    btn.style.left = rx + 'px';
+    btn.style.top  = ry + 'px';
 
-    btn.style.transition = 'transform 0.18s cubic-bezier(0.34,1.56,0.64,1), font-size 0.3s';
-    btn.style.transform = `translate(${rx}px, ${ry}px)`;
-
-    if (noEscapes >= 3) {
-      btn.style.fontSize = '0.7rem';
-      btn.style.opacity = '0.3';
+    if (noEscapes >= 5) {
+      btn.style.fontSize = '0.75rem';
+      btn.style.opacity = '0.35';
     }
-    if (noEscapes >= 6) {
+    if (noEscapes >= 8) {
       btn.style.opacity = '0';
       btn.style.pointerEvents = 'none';
     }
